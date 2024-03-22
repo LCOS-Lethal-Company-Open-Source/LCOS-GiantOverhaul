@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyName>Template</AssemblyName>
-    <Description>A template plugin</Description>
+    <AssemblyName>GiantOverhaul</AssemblyName>
+    <Description>A mod which changes the giant AI to work with the Candyland map</Description>
     <Version>1.0.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
