@@ -7,7 +7,7 @@ public class Plugin : BaseUnityPlugin
 {
 
     //TODO: Get actual amount of seconds
-    private const int secondsUntilMad = 300;
+    private const int secondsUntilMad = 330;
     Harmony harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
     private void Awake()
