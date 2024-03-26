@@ -29,5 +29,14 @@ public class Plugin : BaseUnityPlugin
             }
             return true;
         }
-    }
+     }
+
+    [HarmonyPatch(typeof(ForestGiantAI), "BeginEatPlayer")]
+    class GiantNoEatInDayPatch 
+    {
+        static bool Prefix() 
+        {
+            return StartOfRound.Instance.timeSinceRoundStarted >= secondsUntilMad;
+        }
+     }
 }
