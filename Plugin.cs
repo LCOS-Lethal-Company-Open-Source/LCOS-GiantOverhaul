@@ -59,6 +59,7 @@ public class Plugin : BaseUnityPlugin
     {
         static void Postfix(ref EnemyAI __instance, ref PlayerControllerB[] __result) 
         {
+            
             if (__instance.enemyType.enemyName == "ForestGiant" && __result != null) 
             {
                 List<PlayerControllerB> updatedSight = new();
@@ -95,6 +96,10 @@ public class Plugin : BaseUnityPlugin
                             else i++;
                         }
                     }
+                }
+                if (__result.Length > updatedSight.Count && __instance.targetPlayer != null && (updatedSight.Count == 0 || !updatedSight.Contains(__instance.targetPlayer))) 
+                {
+                    __instance.SwitchToBehaviourState(0);
                 }
                 if (updatedSight.Count == 0) __result = null;
                 else __result = updatedSight.ToArray();
