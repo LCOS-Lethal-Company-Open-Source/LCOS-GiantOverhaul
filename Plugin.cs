@@ -1,4 +1,6 @@
-﻿using System.Reflection;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using BepInEx;
 using BepInEx.Logging;
 using GameNetcodeStuff;
@@ -23,15 +25,16 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo($"Giant Overhaul Active!");
     }
 
+    /*
     [HarmonyPatch(typeof(ForestGiantAI), "Update")]
     class GiantPassiveDayPatch 
     {
-
         static FieldInfo lostPlayerInChase = typeof(ForestGiantAI).GetField("lostPlayerInChase", 
                                                                              BindingFlags.Instance | 
                                                                              BindingFlags.NonPublic);
         static bool Prefix(ref ForestGiantAI __instance) 
         {
+            Instance.Logger.LogInfo(__instance.enemyType.name); 
             bool playerHasCandy = false;
             PlayerControllerB[] playersInLOS = __instance.GetAllPlayersInLineOfSight(50f, 70, __instance.eye, 3f, StartOfRound.Instance.collidersRoomDefaultAndFoliage);
             for (int i = 0; i < playersInLOS.Length; i++) 
@@ -47,6 +50,55 @@ public class Plugin : BaseUnityPlugin
                 __instance.currentBehaviourStateIndex = 1;
             }
             return true;
+        }
+    }
+    */
+
+    [HarmonyPatch(typeof(EnemyAI), "GetAllPlayersInLineOfSight")]
+    class GiantSightPatch 
+    {
+        static void Postfix(ref EnemyAI __instance, ref PlayerControllerB[] __result) 
+        {
+            if (__instance.enemyType.enemyName == "ForestGiant" && __result != null) 
+            {
+                List<PlayerControllerB> updatedSight = new();
+                if (StartOfRound.Instance.timeSinceRoundStarted <= secondsUntilMad) 
+                {
+                    for (int i = 0; i < __result.Length; i++) 
+                    {
+                        if (__result[i].twoHanded) 
+                        {
+                            updatedSight.Add(__result[i]);
+                        }
+                    }
+                }
+                else 
+                {
+                    updatedSight = __result.ToList<PlayerControllerB>();
+                    bool playerHasCandy = false;
+                    for (int i = 0; i < __result.Length; i++) 
+                    {
+                        if (__result[i].twoHanded) 
+                        {
+                            playerHasCandy = true;
+                            break;
+                        }
+                    }
+                    if (playerHasCandy)
+                    {
+                        for (int i = 0; i < __result.Length;) 
+                        {
+                            if (!__result[i].twoHanded) 
+                            {
+                                updatedSight.RemoveAt(i);
+                            }
+                            else i++;
+                        }
+                    }
+                }
+                if (updatedSight.Count == 0) __result = null;
+                else __result = updatedSight.ToArray();
+            }
         }
     }
 
