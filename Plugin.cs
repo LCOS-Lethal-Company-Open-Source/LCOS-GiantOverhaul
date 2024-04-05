@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BepInEx;
@@ -94,6 +95,20 @@ public class Plugin : BaseUnityPlugin
                 return playerHasCandy;
             }
             else return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(ForestGiantAI), "Update")]
+    class GiantEatCandyPatch 
+    {
+
+        public static MethodInfo eatAnim = typeof(ForestGiantAI).GetMethod("EatPlayerAnimation", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        static bool Prefix(ref ForestGiantAI __instance) 
+        {
+            if(!__instance.inSpecialAnimation) __instance.StartCoroutine((System.Collections.IEnumerator) eatAnim.Invoke(__instance, new object[]{null, UnityEngine.Vector3.zero, 0}));
+            return true;
+
         }
     }
 }
