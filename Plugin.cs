@@ -25,35 +25,6 @@ public class Plugin : BaseUnityPlugin
         Logger.LogInfo($"Giant Overhaul Active!");
     }
 
-    /*
-    [HarmonyPatch(typeof(ForestGiantAI), "Update")]
-    class GiantPassiveDayPatch 
-    {
-        static FieldInfo lostPlayerInChase = typeof(ForestGiantAI).GetField("lostPlayerInChase", 
-                                                                             BindingFlags.Instance | 
-                                                                             BindingFlags.NonPublic);
-        static bool Prefix(ref ForestGiantAI __instance) 
-        {
-            Instance.Logger.LogInfo(__instance.enemyType.name); 
-            bool playerHasCandy = false;
-            PlayerControllerB[] playersInLOS = __instance.GetAllPlayersInLineOfSight(50f, 70, __instance.eye, 3f, StartOfRound.Instance.collidersRoomDefaultAndFoliage);
-            for (int i = 0; i < playersInLOS.Length; i++) 
-            {
-                if (playersInLOS[i].twoHanded) playerHasCandy = true;
-            }
-            if (StartOfRound.Instance.timeSinceRoundStarted <= secondsUntilMad && !playerHasCandy) 
-            {
-                __instance.currentBehaviourStateIndex = 0;
-            }
-            if (playerHasCandy) 
-            {
-                __instance.currentBehaviourStateIndex = 1;
-            }
-            return true;
-        }
-    }
-    */
-
     [HarmonyPatch(typeof(EnemyAI), "GetAllPlayersInLineOfSight")]
     class GiantSightPatch 
     {
