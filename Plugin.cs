@@ -102,13 +102,17 @@ public class Plugin : BaseUnityPlugin
     class GiantEatCandyPatch 
     {
 
+        public static FieldInfo eating = typeof(ForestGiantAI).GetField("inEatingPlayerAnimation", BindingFlags.Instance | BindingFlags.NonPublic);
         public static MethodInfo eatAnim = typeof(ForestGiantAI).GetMethod("EatPlayerAnimation", BindingFlags.Instance | BindingFlags.NonPublic);
 
         static bool Prefix(ref ForestGiantAI __instance) 
         {
-            if(!__instance.inSpecialAnimation) __instance.StartCoroutine((System.Collections.IEnumerator) eatAnim.Invoke(__instance, new object[]{null, UnityEngine.Vector3.zero, 0}));
+            if(!(bool) eating.GetValue(__instance) && __instance.IsSpawned) 
+            {
+                PlayerControllerB dummyPlayer = new();
+                __instance.StartCoroutine((System.Collections.IEnumerator) eatAnim.Invoke(__instance, new object[]{dummyPlayer, StartOfRound.Instance.allPlayerObjects[0].transform.position, 0}));
+            }
             return true;
-
         }
     }
 }
