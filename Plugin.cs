@@ -98,6 +98,7 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
+    /*
     [HarmonyPatch(typeof(ForestGiantAI), "Update")]
     class GiantEatCandyPatch 
     {
@@ -115,4 +116,5 @@ public class Plugin : BaseUnityPlugin
             return true;
         }
     }
+    */
 }
