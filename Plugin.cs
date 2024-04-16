@@ -79,6 +79,25 @@ public class Plugin : BaseUnityPlugin
         }
     }
 
+    [HarmonyPatch(typeof(ForestGiantAI), "GiantSeePlayerEffect")]
+    class GiantFearPatch 
+    {
+        static bool Prefix(ref ForestGiantAI __instance) 
+        {
+            if (StartOfRound.Instance.timeSinceRoundStarted <= secondsUntilMad) 
+            {
+                bool playerHasCandy = false;
+                PlayerControllerB[] playersInLOS = __instance.GetAllPlayersInLineOfSight(50f, 70, __instance.eye, 3f, StartOfRound.Instance.collidersRoomDefaultAndFoliage);
+                for (int i = 0; i < playersInLOS.Length; i++) 
+                {
+                    if (playersInLOS[i].twoHanded) playerHasCandy = true;
+                }
+                return playerHasCandy;
+            }
+            else return true;
+        }
+    }
+
     [HarmonyPatch(typeof(ForestGiantAI), "BeginEatPlayer")]
     class GiantNoEatInDayPatch 
     {
