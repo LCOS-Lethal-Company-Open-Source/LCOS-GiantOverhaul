@@ -2,7 +2,7 @@
     "name": "Giant_Overhaul",
     "version_number": "0.0.1",
     "website_url": "https://github.com/LCOS-Lethal-Company-Open-Source/LCOS-GiantOverhaul",
-    "description": "A mod which changes the giant AI to work with the Candyland map",
+    "description": "A mod which changes the giant AI to work with the Candyland map. Specifically, the giant is now no longer able to target players during the day, except when a player is holding a two-handed item. Giants now also prioritize players with two-handed items.",
     "dependencies": [
         "BepInEx-BepInExPack-5.4.2100"
     ]
